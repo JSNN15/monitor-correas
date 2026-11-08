@@ -54,7 +54,7 @@ A real pilot trains on two to four weeks of the client's own belt video, includi
 
 | File | What it is |
 |---|---|
-| `index.html` | Control room, try-your-own-photo mode and per-video results. |
+| `index.html` | Control room, try-your-own-photo or live-camera mode (phone, tablet or PC) and per-video results. |
 | `det.js` | ONNX inference and post-processing. |
 | `model.onnx.part0`, `.part1` | Detector weights split in two. |
 | `f/a`, `f/b`, `f/c` | Frames of the three demo belts (CV-101, CV-102, CV-103). |

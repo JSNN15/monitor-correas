@@ -52,7 +52,7 @@ En un piloto real se entrena con dos a cuatro semanas de video de la correa del 
 
 | Archivo | Qué es |
 |---|---|
-| `index.html` | Sala de control, prueba con foto propia y resultados video por video. |
+| `index.html` | Sala de control, prueba con foto propia o con la cámara en vivo (celular, tablet o PC) y resultados video por video. |
 | `det.js` | Inferencia ONNX y posprocesamiento. |
 | `model.onnx.part0`, `.part1` | Pesos del detector en dos partes. |
 | `f/a`, `f/b`, `f/c` | Cuadros de las tres correas de la demo (CV-101, CV-102, CV-103). |

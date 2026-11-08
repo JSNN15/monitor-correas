@@ -130,7 +130,7 @@ footer{padding:22px 0 40px;font-size:.82rem;color:var(--muted)}
       <h1>Grietas en la correa, <em>detectadas en marcha</em></h1>
       <p class="sub">Una cámara frente a la correa y un modelo de IA en un computador local. Cada grieta confirmada queda ubicada en metros desde el empalme y genera un aviso a mantenimiento.</p>
     </div>
-    <div class="ctas"><a class="p" href="#sala">Ver la sala de control</a><a href="#prueba">Probar con una foto</a></div>
+    <div class="ctas"><a class="p" href="#sala">Ver la sala de control</a><a href="#prueba">Probar con foto o cámara</a></div>
   </div>
 
   <div class="scada" id="sala" aria-label="Sala de control simulada con video real de correas industriales; la IA corre en este navegador">
@@ -202,14 +202,14 @@ footer{padding:22px 0 40px;font-size:.82rem;color:var(--muted)}
 </div></section>
 
 <section class="blk" id="prueba"><div class="in">
-  <h2>Probar con una foto</h2>
-  <p class="lead">Sube una foto de una correa o elige un cuadro de ejemplo. La imagen se analiza en tu equipo y no se envía a ningún servidor.</p>
+  <h2>Probar con una foto o con tu cámara</h2>
+  <p class="lead">Sube una foto de una correa, elige un cuadro de ejemplo o apunta la cámara del celular, tablet o PC a una correa (o a un video de correa en otra pantalla). Todo se analiza en tu equipo y nada se envía a ningún servidor.</p>
   <div class="try">
     <div class="stage"><canvas id="t-cv" width="1280" height="720"></canvas></div>
     <div>
       <div class="verdict" id="t-res">Elige una imagen</div>
       <p class="note" id="t-det" style="margin:8px 0 0"></p>
-      <div class="btns"><label class="btn">Subir foto<input type="file" id="t-file" accept="image/*" style="display:none"></label></div>
+      <div class="btns"><button class="btn" id="t-cam">Cámara en vivo</button><label class="btn">Subir foto<input type="file" id="t-file" accept="image/*" style="display:none"></label></div>
       <p class="note" style="margin:6px 0">Cuadros de ejemplo (de las secuencias de prueba):</p>
       <div class="thumbs" id="t-thumbs"></div>
       <p class="note" style="margin-top:12px">Funciona mejor con fotos tomadas de cerca y con la correa ocupando gran parte de la imagen, como en los videos de entrenamiento.</p>
@@ -418,7 +418,7 @@ footer{padding:22px 0 40px;font-size:.82rem;color:var(--muted)}
   const tcv = $('t-cv'), tx = tcv.getContext('2d');
   const run = async (img) => {
     if (!iaReady) { $('t-res').textContent = 'La IA no cargó en este navegador'; return; }
-    const W = img.naturalWidth, H = img.naturalHeight; tcv.width = W > H ? 1280 : Math.round(1280 * W / H); tcv.height = W > H ? Math.round(1280 * H / W) : 1280;
+    const W = img.videoWidth || img.naturalWidth, H = img.videoHeight || img.naturalHeight; tcv.width = W > H ? 1280 : Math.round(1280 * W / H); tcv.height = W > H ? Math.round(1280 * H / W) : 1280;
     tx.drawImage(img, 0, 0, tcv.width, tcv.height);
     const r = await DetectorCorreas.detect(img, {conf: conf()}), k = tcv.width / W;
     for (const b of r.boxes) { tx.lineWidth = Math.max(3, tcv.width / 320); tx.strokeStyle = '#ff4d3d'; tx.strokeRect(b.x * k, b.y * k, b.w * k, b.h * k); tx.font = `600 ${Math.round(tcv.width / 50)}px IBM Plex Mono, monospace`; tx.fillStyle = '#ff4d3d'; tx.fillText(`grieta ${nf(b.score * 100, 0)} %`, b.x * k, Math.max(20, b.y * k - 6)); }
@@ -426,7 +426,25 @@ footer{padding:22px 0 40px;font-size:.82rem;color:var(--muted)}
     el.textContent = r.boxes.length ? `${r.boxes.length} ${r.boxes.length === 1 ? 'posible grieta' : 'posibles grietas'}` : 'Sin grietas detectadas';
     $('t-det').textContent = `${nf(r.ms, 0)} ms en tu equipo · sensibilidad ${$('c-conf-v').textContent}`;
   };
-  const useSrc = (src) => { const im = new Image(); im.onload = () => run(im); im.src = src; };
+  /* cámara en vivo: el mismo detector, cuadro a cuadro, en este equipo */
+  let tStream = null, tVid = null, tBusy = false;
+  const camStop = () => { if (tStream) tStream.getTracks().forEach((t) => t.stop()); tStream = null; $('t-cam').textContent = 'Cámara en vivo'; };
+  const camLoop = async () => {
+    if (!tStream) return;
+    if (!tBusy && tVid.videoWidth) { tBusy = true; try { await run(tVid); } finally { tBusy = false; } }
+    setTimeout(camLoop, 120);
+  };
+  $('t-cam').addEventListener('click', async () => {
+    if (tStream) { camStop(); return; }
+    if (!iaReady) { $('t-res').textContent = 'La IA aún está cargando'; return; }
+    try {
+      tStream = await navigator.mediaDevices.getUserMedia({video: {facingMode: {ideal: 'environment'}, width: {ideal: 1280}, height: {ideal: 720}}, audio: false});
+      tVid = tVid || Object.assign(document.createElement('video'), {muted: true, playsInline: true});
+      tVid.srcObject = tStream; await tVid.play();
+      $('t-cam').textContent = 'Detener cámara'; camLoop();
+    } catch (err) { tStream = null; $('t-res').className = 'verdict'; $('t-res').textContent = 'No se pudo abrir la cámara (permiso o navegador)'; }
+  });
+  const useSrc = (src) => { camStop(); const im = new Image(); im.onload = () => run(im); im.src = src; };
   $('t-thumbs').innerHTML = M.samples.map((s) => `<img src="${s}" alt="Cuadro de ejemplo de correa">`).join('');
   $('t-thumbs').addEventListener('click', (e) => { const t = e.target.closest('img'); if (t) useSrc(t.getAttribute('src')); });
   $('t-file').addEventListener('change', (e) => { const f = e.target.files[0]; if (f) useSrc(URL.createObjectURL(f)); });
