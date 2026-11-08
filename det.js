@@ -1,5 +1,5 @@
-/* Centinela de correas · detector de grietas en el navegador (ONNX Runtime Web). */
-window.Centinela = (() => {
+/* Monitor de correas · detector de grietas en el navegador (ONNX Runtime Web). */
+window.DetectorCorreas = (() => {
   const IW = 640, IH = 384;
   let session = null, loading = null, backend = 'wasm';
   const fetchModel = async (parts) => {

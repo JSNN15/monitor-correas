@@ -1,15 +1,15 @@
-# Centinela de correas
+# Monitor de correas
 
 **Una cámara bajo el retorno de una correa transportadora y un modelo de IA en un computador local. Detecta grietas con la correa en marcha, confirma cada una en varios cuadros, la ubica en metros desde el empalme y genera la orden de trabajo.**
 
-[![Abrir la máquina](https://img.shields.io/badge/Probar-jsnn15.github.io%2Fcentinela--correas-3fd5f0?style=for-the-badge)](https://jsnn15.github.io/centinela-correas/)
+[![Abrir la máquina](https://img.shields.io/badge/Probar-jsnn15.github.io%2Fmonitor--correas-3fd5f0?style=for-the-badge)](https://jsnn15.github.io/monitor-correas/)
 ![YOLOv8](https://img.shields.io/badge/YOLOv8-BeltCrack-111?style=flat-square)
 ![ONNX Runtime Web](https://img.shields.io/badge/ONNX%20Runtime-en%20el%20navegador-555?style=flat-square)
 ![Licencia](https://img.shields.io/badge/licencia-AGPL--3.0-blue?style=flat-square)
 
 **Español** · [English](README.en.md)
 
-<a href="https://jsnn15.github.io/centinela-correas/"><img src="docs/demo.gif" alt="Video de una correa en marcha con una grieta marcada, su posición en el mapa de la correa y la prioridad" width="100%"></a>
+<a href="https://jsnn15.github.io/monitor-correas/"><img src="docs/demo.gif" alt="Video de una correa en marcha con una grieta marcada, su posición en el mapa de la correa y la prioridad" width="100%"></a>
 
 ## El problema
 

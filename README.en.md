@@ -1,8 +1,8 @@
-# Centinela · Conveyor Belt Sentinel
+# Belt Monitor
 
 **A camera under the return side of a conveyor belt and an AI model on a local computer. It detects cracks while the belt runs, confirms each one over several frames, locates it in meters from the splice and creates the work order.**
 
-[![Open the tool](https://img.shields.io/badge/Try%20it-jsnn15.github.io%2Fcentinela--correas-3fd5f0?style=for-the-badge)](https://jsnn15.github.io/centinela-correas/)
+[![Open the tool](https://img.shields.io/badge/Try%20it-jsnn15.github.io%2Fmonitor--correas-3fd5f0?style=for-the-badge)](https://jsnn15.github.io/monitor-correas/)
 ![YOLOv8](https://img.shields.io/badge/YOLOv8-BeltCrack-111?style=flat-square)
 ![ONNX Runtime Web](https://img.shields.io/badge/ONNX%20Runtime-in%20the%20browser-555?style=flat-square)
 ![License](https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square)
@@ -11,7 +11,7 @@
 
 > The interface is in Spanish.
 
-<a href="https://jsnn15.github.io/centinela-correas/"><img src="docs/demo.gif" alt="Running belt video with a crack marked, its position on the belt map and its priority" width="100%"></a>
+<a href="https://jsnn15.github.io/monitor-correas/"><img src="docs/demo.gif" alt="Running belt video with a crack marked, its position on the belt map and its priority" width="100%"></a>
 
 ## The problem
 
