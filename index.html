@@ -1235,7 +1235,8 @@
           msAvg = 0,
           iaReady = false;
         const belts = CLIPS.map(() => ({defects: [], tracks: [], log: []}));
-        const conf = () => +$('c-conf').value;
+        // el control es de sensibilidad: a la derecha, más sensible, es decir, un umbral de confianza más bajo
+        const conf = () => Math.round((0.9 - +$('c-conf').value) * 100) / 100;
         const updConf = () => {
           const c = conf();
           $('c-conf-v').textContent = c <= 0.35 ? 'alta' : c >= 0.55 ? 'baja' : 'media';
